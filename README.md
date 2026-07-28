@@ -33,7 +33,7 @@ overlay and attached media on and off.
 
 #### Thread View
 
-<img src="assets/images/thread-preview.png" width="70%" />
+<img src="assets/images/ThreadPreview.png" width="70%" />
 
 #### Board View
 
