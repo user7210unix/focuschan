@@ -1,0 +1,99 @@
+/* layout.css — page-level structure shared by both views. */
+
+html {
+  background: var(--color-bg);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.view {
+  min-height: 100vh;
+}
+
+.view[hidden] {
+  display: none;
+}
+
+/* ---- Thread view: three-column layout ---- */
+
+#thread-view {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr var(--indicator-width);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  height: 100vh;
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid var(--color-border);
+}
+
+.reply-stream {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.nav-indicator {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Focus ring for keyboard users (accessibility floor) ---- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ---- Responsive: collapse the extra columns on narrow viewports ---- */
+
+@media (max-width: 900px) {
+  #thread-view {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+  }
+
+  .sidebar {
+    height: auto;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    overflow-x: auto;
+  }
+
+  .legend {
+    display: none; /* keep the mobile header uncluttered */
+  }
+
+  .reply-stream {
+    height: 100%;
+  }
+
+  .nav-indicator {
+    display: none;
+  }
+}

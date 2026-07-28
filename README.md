@@ -1,4 +1,4 @@
-# Focus Chan (Alpha V0.2)
+# A Quiet Reader
 
 A minimalist, editorial-style client for reading 4chan threads. Pure HTML, CSS,
 and vanilla JavaScript (ES modules) — no frameworks, no build step.
@@ -28,9 +28,6 @@ and vanilla JavaScript (ES modules) — no frameworks, no build step.
 
 The sidebar's **Tree** / **Images** legend items toggle the quote-tree
 overlay and attached media on and off.
-
-## Preview (Alpha)
-<img src="assets/images/thread-preview.png" width="70%" />
 
 ## Project structure
 
@@ -82,7 +79,7 @@ Browsers block ES modules (`<script type="module">`) from loading over the
 `index.html`. It isn't a bug in the app; every module-based static site
 needs to be served over `http://`, even for local testing.
 
-From inside the `focuschan` folder, run one of these, then open the
+From inside the `chan-reader` folder, run one of these, then open the
 printed `http://localhost:...` URL (not the file directly):
 
 ```bash
@@ -98,3 +95,15 @@ npx serve .
 
 GitHub Pages (below) serves everything over `https://`, so this only
 matters for local testing.
+
+## Deploying to GitHub Pages
+
+1. Create a new GitHub repository and push this folder's contents to it
+   (the repo root should contain `index.html` directly).
+2. In the repo, go to **Settings → Pages**.
+3. Under **Build and deployment**, set **Source** to "Deploy from a branch",
+   pick your default branch and the `/ (root)` folder, then save.
+4. GitHub will publish the site at `https://<your-username>.github.io/<repo>/`
+   within a minute or two.
+
+No build step, no dependencies to install — it's static files served as-is.

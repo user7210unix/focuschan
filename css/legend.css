@@ -1,0 +1,115 @@
+/* legend.css — the small interaction key (bottom-left) and the
+   minimal position indicator (far right). */
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.legend__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--color-text-muted);
+  padding: 2px 0;
+  transition: color var(--duration-fast) ease;
+}
+
+.legend__item:not(:disabled):hover {
+  color: var(--color-text);
+}
+
+.legend__item.is-active-off {
+  color: var(--color-text-muted);
+  opacity: 0.45;
+}
+
+.legend__icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.legend__icon--circle {
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.legend__icon--dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.legend__icon--dots::before,
+.legend__icon--dots::after {
+  content: '';
+}
+
+.legend__icon--dots {
+  background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.6px);
+  background-size: 4px 4px;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+.legend__icon--tree {
+  border-left: 1px solid currentColor;
+  position: relative;
+}
+
+.legend__icon--tree::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 1px;
+  background: currentColor;
+}
+
+.legend__icon--rect {
+  border: 1px solid currentColor;
+  border-radius: 1px;
+}
+
+/* ---- Right-hand position indicator ---- */
+
+.nav-indicator__track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+}
+
+.nav-dot {
+  position: relative;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  transition: transform var(--duration-medium) var(--ease-camera),
+    background var(--duration-medium) var(--ease-camera);
+}
+
+.nav-dot--active {
+  width: 6px;
+  height: 6px;
+  background: var(--color-text);
+}
+
+.nav-dot__label {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A Quiet Reader — 4chan, unhurried</title>
+  <link rel="icon" href="data:," />
+
+  <!-- Editorial serif for reading, a small sans for labels/meta -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/board-view.css" />
+  <link rel="stylesheet" href="css/thread-view.css" />
+  <link rel="stylesheet" href="css/legend.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ============== BOARD / CATALOG VIEW ============== -->
+    <section id="board-view" class="view">
+      <div class="board-view__inner">
+        <header class="board-view__header">
+          <h1 class="board-view__brand">A Quiet Reader</h1>
+          <p class="board-view__tagline">An unhurried way to read 4chan threads.</p>
+        </header>
+
+        <form id="board-form" class="board-form">
+          <label for="board-input" class="board-form__label">Board</label>
+          <div class="board-form__row">
+            <span class="board-form__prefix">/</span>
+            <input
+              id="board-input"
+              class="board-form__input"
+              type="text"
+              value="wg"
+              maxlength="8"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Board code"
+            />
+            <span class="board-form__prefix">/</span>
+            <button type="submit" class="board-form__submit">Open</button>
+          </div>
+          <div id="board-suggestions" class="board-suggestions"></div>
+        </form>
+
+        <h2 id="board-view-title" class="board-view__board-title">/wg/</h2>
+        <div id="thread-list" class="thread-list" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ============== THREAD READER VIEW ============== -->
+    <section id="thread-view" class="view" hidden>
+      <aside class="sidebar">
+        <div id="op-panel" class="op-panel"></div>
+
+        <div id="legend" class="legend">
+          <button class="legend__item" data-toggle="scroll" disabled>
+            <span class="legend__icon legend__icon--circle" aria-hidden="true"></span>
+            <span>Scroll</span>
+          </button>
+          <button class="legend__item" data-toggle="focus" disabled>
+            <span class="legend__icon legend__icon--dots" aria-hidden="true"></span>
+            <span>Focus</span>
+          </button>
+          <button class="legend__item" data-toggle="tree" title="Toggle the quote tree">
+            <span class="legend__icon legend__icon--tree" aria-hidden="true"></span>
+            <span>Tree</span>
+          </button>
+          <button class="legend__item" data-toggle="images" title="Toggle images">
+            <span class="legend__icon legend__icon--rect" aria-hidden="true"></span>
+            <span>Images</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="reply-stream">
+        <div id="reply-viewport" class="reply-stream__viewport">
+          <div id="reply-inner" class="reply-stream__inner">
+            <svg id="quote-tree" class="quote-tree" aria-hidden="true"></svg>
+            <!-- reply articles are injected here by threadView.js -->
+          </div>
+        </div>
+      </main>
+
+      <aside id="nav-indicator" class="nav-indicator" aria-hidden="true"></aside>
+    </section>
+
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

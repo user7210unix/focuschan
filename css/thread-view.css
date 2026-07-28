@@ -1,0 +1,201 @@
+/* thread-view.css — the reading experience itself. */
+
+/* ---- OP panel (fixed, in the sidebar) ---- */
+
+.op-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.board-tag {
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  transition: color var(--duration-fast) ease;
+}
+
+.board-tag:hover {
+  color: var(--color-accent);
+}
+
+.board-tag__title {
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+}
+
+.op-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-2xs);
+}
+
+.op-subject {
+  font-size: var(--fs-op-subject);
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0 0 var(--space-sm);
+}
+
+.op-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.op-comment {
+  font-size: var(--fs-op-comment);
+  line-height: 1.55;
+  color: var(--color-text-soft);
+}
+
+/* ---- Reply stream viewport ---- */
+
+.reply-stream__viewport {
+  width: 100%;
+  max-width: var(--content-max-width);
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.reply-stream__inner {
+  position: relative;
+  padding: 45vh 0;
+  will-change: transform;
+}
+
+/* ---- Quote tree overlay ---- */
+
+.quote-tree {
+  position: absolute;
+  top: 0;
+  left: -34px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.tree-line {
+  stroke: var(--color-line);
+  stroke-width: 1;
+  fill: none;
+}
+
+.tree-line--spine {
+  opacity: 0.7;
+}
+
+.tree-line--branch {
+  opacity: 0.55;
+}
+
+body.hide-tree .quote-tree {
+  display: none;
+}
+
+/* ---- Individual reply ---- */
+
+.reply {
+  max-width: var(--content-max-width);
+  padding: 0 var(--space-md);
+  margin-bottom: var(--reply-gap);
+  will-change: transform, filter, opacity;
+}
+
+.reply__no {
+  font-family: var(--font-sans);
+  font-size: var(--fs-reply-no);
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+  margin: 0 0 var(--space-2xs);
+}
+
+.reply__body {
+  font-size: var(--fs-reply-body);
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.reply__body .post-ref {
+  color: var(--color-accent);
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--duration-fast) ease;
+}
+
+.reply__body .post-ref:hover {
+  border-color: var(--color-accent);
+}
+
+.reply__body .greentext {
+  color: var(--color-greentext);
+}
+
+.reply__body s {
+  background: var(--color-text);
+  color: var(--color-text);
+  cursor: pointer;
+  border-radius: 1px;
+}
+
+.reply__body s.revealed {
+  background: transparent;
+  color: inherit;
+}
+
+/* ---- Attached media ----
+   Every attachment — regardless of its original dimensions — is framed at
+   the same ratio and shown at full resolution immediately, so the reply
+   stream reads as a consistent, editorial-feeling column rather than a
+   jumble of arbitrary image sizes. */
+
+.reply__media {
+  margin: var(--space-md) 0 0;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--color-border);
+}
+
+.reply__media-img,
+.reply__media-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+body.hide-images .reply__media {
+  display: none;
+}
+
+/* ---- Loading / error states inside the OP panel ---- */
+
+.op-panel .loading,
+.op-panel .error {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--color-text-muted);
+}
+
+.link-button {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--color-accent);
+  text-decoration: underline;
+  margin-top: var(--space-xs);
+}
