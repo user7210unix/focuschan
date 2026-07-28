@@ -30,9 +30,13 @@ The sidebar's **Tree** / **Images** legend items toggle the quote-tree
 overlay and attached media on and off.
 
 ## Preview (not finished state)
+
 #### Thread View
+
 <img src="assets/images/thread-preview.png" width="70%" />
+
 #### Board View
+
 <img src="assets/images/board-preview.png" width="70%" />
 
 ## Project structure
