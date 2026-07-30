@@ -1,6 +1,10 @@
 // utils.js — small, dependency-free helpers used across the app.
 
-const ALLOWED_TAGS = new Set(['BR', 'SPAN', 'S', 'EM', 'STRONG', 'B', 'I', 'WBR']);
+const ALLOWED_TAGS = new Set(['BR', 'SPAN', 'S', 'EM', 'STRONG', 'B', 'I', 'WBR', 'A']);
+
+// Matches bare "http(s)://..." runs so they can be turned into real links —
+// 4chan doesn't linkify plain-text URLs itself outside of quotelinks.
+const URL_PATTERN = /\bhttps?:\/\/[^\s<>"']+[^\s<>"'.,!?)\]]/g;
 
 /** Decode HTML entities in a plain-text field (subject, name, etc). */
 export function decodeEntities(str = '') {
@@ -27,6 +31,7 @@ export function renderComment(html = '') {
   const template = document.createElement('template');
   template.innerHTML = html;
   sanitize(template.content);
+  linkify(template.content);
   return template.content;
 }
 
@@ -46,6 +51,24 @@ function sanitize(root) {
       return;
     }
 
+    // A real (non-quotelink) anchor: 4chan occasionally wraps links itself.
+    // Keep only a sanitized href, drop everything else, and mark it so the
+    // embed viewer can intercept clicks.
+    if (tag === 'A') {
+      const href = safeHref(node.getAttribute('href'));
+      if (!href) {
+        node.replaceWith(document.createTextNode(node.textContent || ''));
+        return;
+      }
+      const text = node.textContent || href;
+      [...node.attributes].forEach((attr) => node.removeAttribute(attr.name));
+      node.setAttribute('href', href);
+      node.setAttribute('rel', 'noopener noreferrer');
+      node.className = 'ext-link';
+      node.textContent = text;
+      return;
+    }
+
     // Anything not on the whitelist is unwrapped to plain text.
     if (!ALLOWED_TAGS.has(tag)) {
       node.replaceWith(document.createTextNode(node.textContent || ''));
@@ -58,6 +81,57 @@ function sanitize(root) {
     if (isGreentext) node.classList.add('greentext');
 
     sanitize(node);
+  });
+}
+
+/** Only allow http(s) links through — blocks javascript:, data:, etc. */
+function safeHref(href) {
+  if (!href) return null;
+  try {
+    const url = new URL(href, window.location.href);
+    return /^https?:$/.test(url.protocol) ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Turn bare "http(s)://..." text runs into clickable, sanitized <a> tags. */
+function linkify(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (node.parentElement?.closest('a')) return NodeFilter.FILTER_REJECT;
+      return URL_PATTERN.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    },
+  });
+
+  const targets = [];
+  let node;
+  while ((node = walker.nextNode())) targets.push(node);
+
+  targets.forEach((textNode) => {
+    const text = textNode.textContent;
+    URL_PATTERN.lastIndex = 0;
+    const frag = document.createDocumentFragment();
+    let lastIndex = 0;
+    let match;
+
+    while ((match = URL_PATTERN.exec(text))) {
+      if (match.index > lastIndex) frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+      const href = safeHref(match[0]);
+      if (href) {
+        const a = document.createElement('a');
+        a.href = href;
+        a.rel = 'noopener noreferrer';
+        a.className = 'ext-link';
+        a.textContent = match[0];
+        frag.appendChild(a);
+      } else {
+        frag.appendChild(document.createTextNode(match[0]));
+      }
+      lastIndex = match.index + match[0].length;
+    }
+    frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+    textNode.replaceWith(frag);
   });
 }
 

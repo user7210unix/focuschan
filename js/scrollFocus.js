@@ -108,6 +108,21 @@ export class ScrollFocusController {
   }
 
   _applyFocusEffects() {
+    // The "Focus" legend toggle turns off blur/opacity/scale while leaving
+    // the camera-scroll transform itself untouched — scrolling still works,
+    // it just stops softening distant replies.
+    const focusEnabled = !document.body.classList.contains('hide-focus');
+
+    if (!focusEnabled) {
+      this.items.forEach((item) => {
+        item.el.style.filter = '';
+        item.el.style.opacity = '';
+        item.el.style.transform = '';
+        item.el.style.pointerEvents = '';
+      });
+      return;
+    }
+
     const centerY = this.current + this.viewport.clientHeight / 2;
     const fIndex = this._fractionalIndexAt(centerY);
 

@@ -4,12 +4,16 @@
 
 import { getThread, getBoardTitle } from './api.js';
 import { decodeEntities, renderComment, formatDateTime } from './utils.js';
-import { createMediaElement } from './mediaLoader.js';
+import { createMediaElement, createOpMediaElement, ensureMediaLoaded } from './mediaLoader.js';
 import { ScrollFocusController } from './scrollFocus.js';
 import { computeRelations, QuoteTree } from './quoteTree.js';
 import { createNavIndicator } from './navIndicator.js';
 import { bindKeyboardNav } from './keyboardNav.js';
 import { navigateToBoard } from './router.js';
+import { setThreadTitle } from './pageMeta.js';
+import { resolveFlag } from './flags.js';
+import { getSettings } from './settings.js';
+import { revealPanel } from './motion.js';
 
 const boardViewEl = document.getElementById('board-view');
 const threadViewEl = document.getElementById('thread-view');
@@ -36,6 +40,7 @@ export async function showThreadView(board, threadNo) {
     const [thread, boardTitle] = await Promise.all([getThread(board, threadNo), getBoardTitle(board)]);
     const [op, ...replies] = thread.posts;
 
+    setThreadTitle(board, op);
     renderOpPanel(op, board, boardTitle);
     const items = renderReplies(board, op, replies);
     setupInteractions(items);
@@ -51,7 +56,7 @@ export async function showThreadView(board, threadNo) {
 
 function renderOpPanel(op, board, boardTitle) {
   const { date, time } = formatDateTime(op.time);
-  const subject = op.sub ? decodeEntities(op.sub) : '(no subject)';
+  const subject = op.sub ? decodeEntities(op.sub) : '';
 
   opPanel.innerHTML = '';
 
@@ -61,13 +66,22 @@ function renderOpPanel(op, board, boardTitle) {
   boardTag.querySelector('.board-tag__title').textContent = boardTitle;
   boardTag.addEventListener('click', () => navigateToBoard(board));
 
+  const opScroll = document.createElement('div');
+  opScroll.className = 'op-panel__scroll';
+
   const opLabel = document.createElement('p');
   opLabel.className = 'op-label';
-  opLabel.textContent = 'OP';
+  opLabel.appendChild(document.createTextNode('OP · No.' + op.no));
+  appendFlag(opLabel, op, board);
 
-  const opSubject = document.createElement('h1');
-  opSubject.className = 'op-subject';
-  opSubject.textContent = subject;
+  // Many threads (fast boards especially) never set a subject — rather than
+  // showing a literal "(no subject)" placeholder, skip the heading entirely
+  // and let the comment carry the panel on its own.
+  const opSubject = subject ? document.createElement('h1') : null;
+  if (opSubject) {
+    opSubject.className = 'op-subject';
+    opSubject.textContent = subject;
+  }
 
   const opMeta = document.createElement('div');
   opMeta.className = 'op-meta';
@@ -77,9 +91,30 @@ function renderOpPanel(op, board, boardTitle) {
 
   const opComment = document.createElement('div');
   opComment.className = 'op-comment';
+  if (!subject) opComment.classList.add('op-comment--standalone');
   opComment.appendChild(renderComment(op.com || ''));
 
-  opPanel.append(boardTag, opLabel, opSubject, opMeta, opComment);
+  opScroll.append(opLabel, ...(opSubject ? [opSubject] : []), opMeta, opComment);
+
+  if (op.tim && getSettings().opImages) {
+    opScroll.appendChild(createOpMediaElement(board, op));
+  }
+
+  opPanel.append(boardTag, opScroll);
+  revealPanel([boardTag, opLabel, opSubject, opMeta, opComment]);
+}
+
+/** Appends a small flag image after a label, when the post/board has one. */
+function appendFlag(container, post, board) {
+  const flag = resolveFlag(post, board);
+  if (!flag) return;
+  const img = document.createElement('img');
+  img.className = 'post-flag';
+  img.src = flag.url;
+  img.alt = flag.alt;
+  img.title = flag.alt;
+  img.loading = 'lazy';
+  container.appendChild(img);
 }
 
 function clearReplyStream() {
@@ -101,6 +136,7 @@ function renderReplies(board, op, replies) {
     const no = document.createElement('p');
     no.className = 'reply__no';
     no.textContent = String(reply.no);
+    appendFlag(no, reply, board);
 
     const body = document.createElement('div');
     body.className = 'reply__body';
@@ -132,9 +168,13 @@ function setupInteractions(items) {
     viewport,
     inner,
     items,
-    onFocusChange: (index) => navIndicator.update(index, items),
+    onFocusChange: (index) => {
+      navIndicator.update(index, items);
+      ensureMediaLoaded(items, index);
+    },
   });
   navIndicator.update(0, items);
+  ensureMediaLoaded(items, 0);
 
   unbindKeys = bindKeyboardNav(activeController);
   inner.addEventListener('click', onInnerClick);

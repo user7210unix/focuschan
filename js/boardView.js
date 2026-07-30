@@ -6,6 +6,8 @@ import { decodeEntities, stripToText } from './utils.js';
 import { navigateToThread, navigateToBoard } from './router.js';
 import { hideThreadView } from './threadView.js';
 import { createBoardAutocomplete } from './boardAutocomplete.js';
+import { setBoardTitle } from './pageMeta.js';
+import { revealOnScroll } from './motion.js';
 
 const boardViewEl = document.getElementById('board-view');
 const threadViewEl = document.getElementById('thread-view');
@@ -52,6 +54,7 @@ async function loadCatalog(board) {
   try {
     const [pages, title] = await Promise.all([getCatalog(board), getBoardTitle(board)]);
     titleEl.textContent = title ? `/${board}/ — ${title}` : `/${board}/`;
+    setBoardTitle(board, title);
     const threads = pages.flatMap((page) => page.threads);
     renderThreadList(board, threads);
   } catch (err) {
@@ -60,7 +63,10 @@ async function loadCatalog(board) {
   }
 }
 
+let disconnectReveal = () => {};
+
 function renderThreadList(board, threads) {
+  disconnectReveal();
   listEl.innerHTML = '';
 
   if (!threads.length) {
@@ -82,6 +88,8 @@ function renderThreadList(board, threads) {
     item.addEventListener('click', () => navigateToThread(board, thread.no));
     listEl.appendChild(item);
   });
+
+  disconnectReveal = revealOnScroll(listEl.querySelectorAll('.thread-row'));
 }
 
 function escapeHtml(str) {
