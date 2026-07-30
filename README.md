@@ -1,4 +1,4 @@
-# Focus Chan (Alpha V0.2)
+# Focus Chan (Alpha V0.3)
 
 A minimalist, editorial-style client for reading 4chan threads. Pure HTML, CSS,
 and vanilla JavaScript (ES modules) — no frameworks, no build step.
