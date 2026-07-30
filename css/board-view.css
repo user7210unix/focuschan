@@ -10,17 +10,11 @@
   margin-bottom: var(--space-lg);
 }
 
-.board-view__brand {
+.board-view__board-title {
   font-size: var(--fs-brand);
   font-weight: 500;
   letter-spacing: 0.01em;
-  margin: 0 0 var(--space-2xs);
-}
-
-.board-view__tagline {
-  font-family: var(--font-sans);
-  font-size: var(--fs-meta);
-  color: var(--color-text-muted);
+  color: var(--color-text);
   margin: 0;
 }
 
@@ -148,16 +142,34 @@
 
 /* ---- Thread list ---- */
 
-.board-view__board-title {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--color-text-soft);
-  margin: 0 0 var(--space-md);
+.thread-list-viewport {
+  position: relative;
 }
 
 .thread-list {
   display: flex;
   flex-direction: column;
+}
+
+/* A soft top/bottom fade, echoing the reply stream's camera-focus feel,
+   so the list doesn't cut off abruptly against the header/viewport edge. */
+.edge-blur {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 64px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.edge-blur--top {
+  top: 0;
+  background: linear-gradient(to bottom, var(--color-bg), transparent);
+}
+
+.edge-blur--bottom {
+  bottom: 0;
+  background: linear-gradient(to top, var(--color-bg), transparent);
 }
 
 .thread-row {

@@ -4,7 +4,7 @@
 .legend {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xs);
+  gap: var(--space-xs);
 }
 
 .legend__item {
@@ -24,58 +24,30 @@
 
 .legend__item.is-active-off {
   color: var(--color-text-muted);
-  opacity: 0.45;
+  opacity: 0.4;
+}
+
+.legend__item:not(.is-active-off) .legend__icon {
+  color: var(--color-accent);
 }
 
 .legend__icon {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
-  display: inline-block;
-}
-
-.legend__icon--circle {
-  border: 1px solid currentColor;
-  border-radius: 50%;
-}
-
-.legend__icon--dots {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  color: currentColor;
 }
 
-.legend__icon--dots::before,
-.legend__icon--dots::after {
-  content: '';
+.legend__icon .icon {
+  display: block;
 }
 
-.legend__icon--dots {
-  background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.6px);
-  background-size: 4px 4px;
-  background-repeat: repeat-x;
-  background-position: center;
-}
-
-.legend__icon--tree {
-  border-left: 1px solid currentColor;
-  position: relative;
-}
-
-.legend__icon--tree::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 6px;
-  height: 1px;
-  background: currentColor;
-}
-
-.legend__icon--rect {
-  border: 1px solid currentColor;
-  border-radius: 1px;
+/* Dark mode toggle swaps sun/moon based on the current theme. */
+:root[data-theme="dark"] .legend__item--theme .legend__icon {
+  transform: rotate(-8deg);
 }
 
 /* ---- Right-hand position indicator ---- */
@@ -100,7 +72,7 @@
 .nav-dot--active {
   width: 6px;
   height: 6px;
-  background: var(--color-text);
+  background: var(--color-accent);
 }
 
 .nav-dot__label {

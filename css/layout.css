@@ -40,6 +40,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid var(--color-border);
+  min-height: 0;
 }
 
 .reply-stream {
@@ -77,16 +78,40 @@ input:focus-visible {
 
   .sidebar {
     height: auto;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-md);
-    padding: var(--space-md);
-    overflow-x: auto;
+    max-height: 46vh;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-md) var(--space-sm);
   }
 
+  .op-panel {
+    min-height: 0;
+  }
+
+  /* Legend stays available on mobile, but as a compact icon-only strip
+     pinned to the bottom-left corner so it never competes with the OP
+     comment for space. */
   .legend {
-    display: none; /* keep the mobile header uncluttered */
+    position: fixed;
+    left: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 20;
+    flex-direction: row;
+    gap: var(--space-2xs);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 6px;
+    box-shadow: var(--shadow-panel);
+  }
+
+  .legend__item {
+    padding: 6px;
+    border-radius: 50%;
+  }
+
+  .legend__item span:not(.legend__icon) {
+    display: none; /* icon-only on mobile — labels come back via title="" tooltip */
   }
 
   .reply-stream {
@@ -95,5 +120,9 @@ input:focus-visible {
 
   .nav-indicator {
     display: none;
+  }
+
+  .embed-viewer__panel {
+    width: 100%;
   }
 }
