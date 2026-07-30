@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>A Quiet Reader — 4chan, unhurried</title>
+  <title>Quiet Reader</title>
   <link rel="icon" href="data:," />
 
   <!-- Editorial serif for reading, a small sans for labels/meta -->
@@ -28,8 +28,7 @@
     <section id="board-view" class="view">
       <div class="board-view__inner">
         <header class="board-view__header">
-          <h1 class="board-view__brand">A Quiet Reader</h1>
-          <p class="board-view__tagline">An unhurried way to read 4chan threads.</p>
+          <h1 id="board-view-title" class="board-view__board-title">/wg/</h1>
         </header>
 
         <form id="board-form" class="board-form">
@@ -52,8 +51,11 @@
           <div id="board-suggestions" class="board-suggestions"></div>
         </form>
 
-        <h2 id="board-view-title" class="board-view__board-title">/wg/</h2>
-        <div id="thread-list" class="thread-list" aria-live="polite"></div>
+        <div class="thread-list-viewport">
+          <div id="thread-list" class="thread-list" aria-live="polite"></div>
+          <div class="edge-blur edge-blur--top" aria-hidden="true"></div>
+          <div class="edge-blur edge-blur--bottom" aria-hidden="true"></div>
+        </div>
       </div>
     </section>
 
@@ -63,21 +65,25 @@
         <div id="op-panel" class="op-panel"></div>
 
         <div id="legend" class="legend">
-          <button class="legend__item" data-toggle="scroll" disabled>
-            <span class="legend__icon legend__icon--circle" aria-hidden="true"></span>
+          <button class="legend__item" data-toggle="scroll" disabled title="Wheel to scroll, releases snap to a reply">
+            <span class="legend__icon" data-icon="scroll" aria-hidden="true"></span>
             <span>Scroll</span>
           </button>
-          <button class="legend__item" data-toggle="focus" disabled>
-            <span class="legend__icon legend__icon--dots" aria-hidden="true"></span>
+          <button class="legend__item" data-toggle="focus" title="Toggle the camera-focus blur">
+            <span class="legend__icon" data-icon="eye" aria-hidden="true"></span>
             <span>Focus</span>
           </button>
-          <button class="legend__item" data-toggle="tree" title="Toggle the quote tree">
-            <span class="legend__icon legend__icon--tree" aria-hidden="true"></span>
+          <button class="legend__item" data-toggle="tree" title="Toggle reply threading">
+            <span class="legend__icon" data-icon="tree" aria-hidden="true"></span>
             <span>Tree</span>
           </button>
           <button class="legend__item" data-toggle="images" title="Toggle images">
-            <span class="legend__icon legend__icon--rect" aria-hidden="true"></span>
+            <span class="legend__icon" data-icon="photo" aria-hidden="true"></span>
             <span>Images</span>
+          </button>
+          <button class="legend__item legend__item--theme" data-toggle="dark" title="Toggle dark mode">
+            <span class="legend__icon" data-icon="moon" aria-hidden="true"></span>
+            <span>Dark mode</span>
           </button>
         </div>
       </aside>
@@ -89,6 +95,8 @@
             <!-- reply articles are injected here by threadView.js -->
           </div>
         </div>
+        <div class="reply-stream__edge reply-stream__edge--top" aria-hidden="true"></div>
+        <div class="reply-stream__edge reply-stream__edge--bottom" aria-hidden="true"></div>
       </main>
 
       <aside id="nav-indicator" class="nav-indicator" aria-hidden="true"></aside>
@@ -96,6 +104,8 @@
 
   </div>
 
+  <script src="js/vendor/gsap/gsap.min.js"></script>
+  <script src="js/vendor/gsap/Flip.min.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>
