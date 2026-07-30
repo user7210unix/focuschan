@@ -1,0 +1,221 @@
+/* board-view.css — the entry screen: pick a board, pick a thread. */
+
+.board-view__inner {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg) var(--space-xl);
+}
+
+.board-view__header {
+  margin-bottom: var(--space-lg);
+}
+
+.board-view__board-title {
+  font-size: var(--fs-brand);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* ---- Board picker form ---- */
+
+.board-form {
+  margin-bottom: var(--space-lg);
+  position: relative;
+}
+
+.board-form__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.board-form__row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-xs);
+  gap: 2px;
+}
+
+.board-form__prefix {
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+}
+
+.board-form__input {
+  flex: 1;
+  font-size: 1.2rem;
+  padding: 2px 4px;
+}
+
+.board-form__submit {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  letter-spacing: 0.03em;
+  color: var(--color-text);
+  padding: var(--space-2xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  transition: border-color var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.board-form__submit:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ---- Board autocomplete dropdown ---- */
+
+.board-suggestions {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  box-shadow: 0 12px 28px -14px rgba(27, 26, 24, 0.18);
+  max-height: 340px;
+  overflow-y: auto;
+  padding: var(--space-2xs) 0;
+
+  /* Closed state: invisible, slightly lower and hidden from interaction.
+     Opening slides the panel up into its resting position while it fades in. */
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity var(--duration-medium) var(--ease-camera),
+    transform var(--duration-medium) var(--ease-camera);
+}
+
+.board-suggestions.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.board-suggestions__category {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: var(--space-xs) var(--space-sm) var(--space-2xs);
+}
+
+.board-suggestions__item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  width: 100%;
+  text-align: left;
+  padding: var(--space-2xs) var(--space-sm);
+  font-family: var(--font-sans);
+  transition: background var(--duration-fast) ease;
+}
+
+.board-suggestions__item:hover,
+.board-suggestions__item.is-active {
+  background: var(--color-bg);
+}
+
+.board-suggestions__code {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+
+.board-suggestions__title {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- Thread list ---- */
+
+.thread-list-viewport {
+  position: relative;
+}
+
+.thread-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A soft top/bottom fade, echoing the reply stream's camera-focus feel,
+   so the list doesn't cut off abruptly against the header/viewport edge. */
+.edge-blur {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 64px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.edge-blur--top {
+  top: 0;
+  background: linear-gradient(to bottom, var(--color-bg), transparent);
+}
+
+.edge-blur--bottom {
+  bottom: 0;
+  background: linear-gradient(to top, var(--color-bg), transparent);
+}
+
+.thread-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: var(--space-2xs);
+  padding: var(--space-md) 0;
+  border-top: 1px solid var(--color-border);
+  width: 100%;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.thread-row:hover {
+  opacity: 0.6;
+}
+
+.thread-row__subject {
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.thread-row__meta {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.thread-row__snippet {
+  font-size: 0.95rem;
+  color: var(--color-text-soft);
+  line-height: 1.5;
+}
+
+.loading,
+.error,
+.empty {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  color: var(--color-text-muted);
+  padding: var(--space-md) 0;
+}
+
+.error {
+  color: #a9564a;
+}
